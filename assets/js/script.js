@@ -1,10 +1,34 @@
 var APIKey = '2291302f3ecdf9ef0323e30a488762cf';
-var cities = [];
+var cities = JSON.parse(localStorage.getItem("cities")) || [];
+
+var message = document.querySelector(".message");
+
 $("button").on("click", function (event) {
+   
     event.preventDefault();
     var getCity = $("#getCity");
     var city = getCity.val().trim();
-    cities.push(city)
+    cities.push(city);
+    function storeCities(){
+        localStorage.setItem("cities", JSON.stringify(cities));
+        getCities();
+    }
+      if (city === null || city === "" ){
+        message.innerHTML = "Invalid input. Please try again!";
+      } else {
+        message.innerHTML = "";
+        renderCities();
+        storeCities();
+      getCities();
+      }
+
+      function renderCities() {
+        for (let index = 0; index < cities.length; index++) {
+            $(".searchData").prepend("<p id= p"+index+">" + cities[index] + "</p>");
+            
+        }
+     
+
     var queryUrl = "https://api.openweathermap.org/data/2.5/weather?q=" +
         city + "&units=imperial&appid=" + APIKey;
     fetch(queryUrl)
@@ -56,5 +80,8 @@ $("button").on("click", function (event) {
                 });
         });
 
-});
-console.log(cities);
+}});
+
+function getCities(){
+    localStorage.getItem('cities');
+}
